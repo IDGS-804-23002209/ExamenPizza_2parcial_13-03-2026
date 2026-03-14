@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h3>Consulta de Ventas</h3>
+    <form method="POST" class="row g-3 mb-4">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="col-md-4">
+            <label>Filtrar por Día:</label>
+            <input type="date" name="dia" class="form-control">
+        </div>
+        <div class="col-md-4">
+            <label>Filtrar por Mes (1-12):</label>
+            <input type="number" name="mes" min="1" max="12" class="form-control">
+        </div>
+        <div class="col-md-4 align-self-end">
+            <button type="submit" class="btn btn-primary">Consultar</button>
+        </div>
+    </form>
+
+    <div class="card p-4 shadow-sm" style="background-color: #f8f9fa;">
+        <h5>Ventas {{ filtro }} [cite: 26]</h5>
+        <hr>
+        {% for v in ventas %}
+            <p><strong>{{ v.Cliente.nombre }}</strong> total: <strong>${{ v.Pedido.total }}</strong> [cite: 32, 33]</p>
+        {% endfor %}
+        <hr>
+        <h4>Ventas totales: ${{ total }} [cite: 34]</h4>
+    </div>
+</div>
+{% endblock %}

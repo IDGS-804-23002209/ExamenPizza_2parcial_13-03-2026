@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white text-center">
+            <h3>Detalle del Pedido #{{ id_pedido }}</h3>
+        </div>
+        <div class="card-body">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Tamaño</th>
+                        <th>Ingredientes</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in detalles %}
+                    <tr>
+                        <td>{{ d.pizza.tamano if d.pizza else 'No indicado' }}</td>
+                        <td>{{ d.pizza.ingredientes if d.pizza else 'Sin ingredientes' }}</td>
+                        <td>{{ d.cantidad }}</td>
+                        <td>${{ d.subtotal }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            <div class="text-center mt-3">
+                <a href="{{ url_for('ventas.reporte_ventas') }}" class="btn btn-secondary">Regresar</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

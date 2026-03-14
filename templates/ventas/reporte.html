@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow-lg" style="background-color: #a3b8d7; border: none; border-radius: 0;">
+        <div class="card-body">
+            <h4 class="text-center mb-4">Consulta de Ventas</h4>
+            
+            <form method="POST" id="filtroForm" class="row g-3 justify-content-center mb-4">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                
+                <div class="col-md-4">
+                    <label class="form-label font-weight-bold">Escribir Día:</label>
+                    <input type="text" id="inputDia" name="dia_nombre" class="form-control" placeholder="Ej: Lunes">
+                    <small class="text-muted">Busca todos los lunes de cualquier mes.</small>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label font-weight-bold">Escribir Mes:</label>
+                    <input type="text" id="inputMes" name="mes_nombre" class="form-control" placeholder="Ej: Marzo">
+                    <small class="text-muted">Busca todas las ventas de ese mes.</small>
+                </div>
+
+                <div class="col-md-2 d-flex align-items-center mt-4">
+                    <button type="submit" class="btn btn-primary w-100">Consultar</button>
+                </div>
+            </form>
+
+            <div class="mx-auto" style="max-width: 600px; background-color: #cccccc; padding: 20px; border: 2px solid #999;">
+                <h5 class="mb-3">Resultados:</h5>
+                <hr>
+                {% if ventas %}
+                    {% for v in ventas %}
+                        <div class="d-flex justify-content-between align-items-center mb-2 border-bottom pb-1">
+                            <div>
+                                <span style="font-weight: bold;">{{ v.Cliente.nombre }}</span>
+                                <br>
+                                <small>Fecha: {{ v.Pedido.fecha.strftime('%d/%m/%Y') }}</small>
+                            </div>
+                            <div class="text-end">
+                                <span style="font-weight: bold;">${{ v.Pedido.total }}</span>
+                                <br>
+                                <a href="{{ url_for('ventas.detalle_venta', id_pedido=v.Pedido.id_pedido) }}" class="btn btn-sm btn-info text-white">Ver Detalle</a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                    <div class="d-flex justify-content-between mt-3">
+                        <span style="font-size: 1.2rem; font-weight: 800;">Ventas Totales:</span>
+                        <span style="font-size: 1.2rem; font-weight: 800;">${{ total }}</span>
+                    </div>
+                {% else %}
+                    <p class="text-center py-3">No hay ventas que coincidan con el nombre del día o mes.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // JavaScript para que al escribir en un campo se limpie el otro automáticamente
+    const inputDia = document.getElementById('inputDia');
+    const inputMes = document.getElementById('inputMes');
+
+    inputDia.addEventListener('input', () => {
+        if(inputDia.value) { inputMes.value = ''; }
+    });
+
+    inputMes.addEventListener('input', () => {
+        if(inputMes.value) { inputDia.value = ''; }
+    });
+</script>
+{% endblock %}
